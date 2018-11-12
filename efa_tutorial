@@ -1,0 +1,54 @@
+---
+title: "efa_tutorial"
+author: "Ellie"
+date: "March 13, 2018"
+output: html_document
+---
+
+Load the dataset...
+```{r}
+data <- read.csv("EFA_tutorial.csv",header=TRUE)
+```
+
+Check that it loaded correctly...
+```{r}
+head(data)
+```
+
+And now install them packages
+```{r}
+install.packages("psych")
+install.packages("GPArotation")
+library("psych")
+library("GPArotation")
+```
+
+Okay, the first step is to figure out the number of factors we'll be retaining.  We'll use a parallel analysis to do this.  The factor method is "minres."
+```{r}
+parallel <- fa.parallel(data, fm = 'minres', fa = 'fa')
+```
+The tutorial suggests that we can use this information to go anywhere from 2 to 5 factors.  This may not map on perfectly to the tutorial, because the tutorial thinks the parallel analysis only suggests 6 factors.  They also say to look at the large drops in the data, the elbow, and the point where the gap between simulated data and actual data tends to be minimum.  Whatevs!
+
+Next up: we actually run the dang factor analysis.  We give it the raw data (or the correlation or covariance matrix), the number of factors to extract, the rotation (I used oblimin before and Rick Hoyle thought it was fine - my factors are defo correlated), and the factor extraction technique (I just can't use maximum likelihood because the data aren't mvn):
+```{r}
+threefactor <- fa(data,nfactors=3,rotate="oblimin",fm="minres")
+print(threefactor)
+```
+
+Now to zero in on just the loadings that are 0.3 or greater (or -0.3 or less):
+```{r}
+print(threefactor$loadings,cutoff= 0.3)
+```
+
+We're looking for a "simple structure" and we tweak the number of factors till we find it:
+```{r}
+fourfactor <- fa(data,nfactors=4,rotate="oblimin",fm="minres")
+print(fourfactor$loadings,cutoff=0.3)
+```
+So in this new thing, unlike in the tutorial, there's double-loading.  It's preferable to use the three factors (relative to using the four factors).
+
+Now to look at the factor mapping:
+```{r}
+fa.diagram(threefactor)
+```
+
