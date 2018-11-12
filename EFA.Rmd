@@ -1,0 +1,338 @@
+---
+title: "EFA"
+author: "Eleanor Hanna"
+date: "April 30, 2018"
+output: html_document
+---
+
+%%%%%%%% INITIAL DATA SCREENING %%%%%%%%
+
+The impact of missing values was assessed in SPSS (since the options available in R would not extend to the number of variables in the data set).  The remaining data are here:
+```{r}
+setwd("Z:/Ellie/2016-2017/dissertation/incubator/aim1/manuscript/analysis/1_assumptions_met_for_EFA/2_outliers_and_normality/")
+EFAdata <- read.csv("EFA_outlier_normality.csv",header=TRUE)
+```
+
+Univariate normality was assessed.
+```{r}
+library(MVN)
+uniAnalysis <- mvn(EFAdata[,2:length(EFAdata)], univariateTest = "SW")
+print(uniAnalysis$Descriptives$Skew)
+print(uniAnalysis$Descriptives$Kurtosis)
+```
+
+Univariate distributions were inspected in order to identify items with skewness greater than |2| and/or kurtosis greater than |7| (see Curran et al., 1996).
+```{r}
+tooSkew <- which(uniAnalysis$Descriptives$Skew<(-2) | uniAnalysis$Descriptives$Skew>2)
+tooKurt <- which(uniAnalysis$Descriptives$Kurtosis<(-7) | uniAnalysis$Descriptives$Kurtosis>7)
+tooSkewVarbles <- c(uniAnalysis$univariateNormality$Variable)[tooSkew]
+tooKurtVarbles <- c(uniAnalysis$univariateNormality$Variable)[tooKurt]
+print(tooSkewVarbles)
+print(tooKurtVarbles)
+```
+
+While no variables were kurtotic greater than |7|, two were skewed greater than |2|.
+
+At the same time, I inspected variables for univariate outliers.
+```{r}
+outlierVarbles <- c()
+numOutliers <- c()
+for (varble in colnames(EFAdata[,2:length(EFAdata)])){
+  zVarble <- (EFAdata[[varble]]-mean(EFAdata[[varble]]))/sd(EFAdata[[varble]])
+  zOutliers <- which(zVarble>3.29 | zVarble<(-3.29))
+  if (length(zOutliers) > 0) {
+    outlierVarbles <- c(outlierVarbles, varble)
+    numOutliers <- c(numOutliers, length(zOutliers))
+    }
+}
+print(outlierVarbles)
+print(numOutliers)
+```
+
+I wanted to record the skewness and kurtosis for variables that had univariate outliers.
+```{r}
+for (varble in outlierVarbles){
+  print(varble)
+  SK <- mvn(EFAdata[[varble]], univariateTest = "SW")
+  print(SK$Descriptives$Skew)
+  print(SK$Descriptives$Kurtosis)
+}
+```
+
+
+In accordance with recommmendations from Tabachnick & Fidell 2013, I attempted transformations of these variables to address both the skewness and the outliers.  I began with the most conservative (reflect if negative skew, and square root).
+
+D102...
+```{r}
+sqrtD102 <- sqrt(8-EFAdata[["D102"]])
+SKsqrtD102 <- mvn(sqrtD102, univariateTest = "SW")
+D102_z_sqrt <- ((sqrtD102-mean(sqrtD102))/sd(sqrtD102))
+sqrtD102outliers <- which(D102_z_sqrt>3.29 | D102_z_sqrt<(-3.29))
+print(SKsqrtD102$Descriptives$Skew)
+print(SKsqrtD102$Descriptives$Kurtosis)
+print(length(sqrtD102outliers))
+```
+
+D081...
+```{r}
+sqrtD081 <- sqrt(8-EFAdata[["D081"]])
+SKsqrtD081 <- mvn(sqrtD081, univariateTest = "SW")
+D081_z_sqrt <- ((sqrtD081-mean(sqrtD081))/sd(sqrtD081))
+sqrtD081outliers <- which(D081_z_sqrt>3.29 | D081_z_sqrt<(-3.29))
+print(SKsqrtD081$Descriptives$Skew)
+print(SKsqrtD081$Descriptives$Kurtosis)
+print(length(sqrtD081outliers))
+```
+
+D007...
+```{r}
+sqrtD007 <- sqrt(8-EFAdata[["D007"]])
+SKsqrtD007 <- mvn(sqrtD007, univariateTest = "SW")
+D007_z_sqrt <- ((sqrtD007-mean(sqrtD007))/sd(sqrtD007))
+sqrtD007outliers <- which(D007_z_sqrt>3.29 | D007_z_sqrt<(-3.29))
+print(SKsqrtD007$Descriptives$Skew)
+print(SKsqrtD007$Descriptives$Kurtosis)
+print(length(sqrtD007outliers))
+```
+
+D012...
+```{r}
+sqrtD012 <- sqrt(8-EFAdata[["D012"]])
+SKsqrtD012 <- mvn(sqrtD012, univariateTest = "SW")
+D012_z_sqrt <- ((sqrtD012-mean(sqrtD012))/sd(sqrtD012))
+sqrtD012outliers <- which(D012_z_sqrt>3.29 | D012_z_sqrt<(-3.29))
+print(SKsqrtD012$Descriptives$Skew)
+print(SKsqrtD012$Descriptives$Kurtosis)
+print(length(sqrtD012outliers))
+```
+
+D084...
+```{r}
+sqrtD084 <- sqrt(8-EFAdata[["D084"]])
+SKsqrtD084 <- mvn(sqrtD084, univariateTest = "SW")
+D084_z_sqrt <- ((sqrtD084-mean(sqrtD084))/sd(sqrtD084))
+sqrtD084outliers <- which(D084_z_sqrt>3.29 | D084_z_sqrt<(-3.29))
+print(SKsqrtD084$Descriptives$Skew)
+print(SKsqrtD084$Descriptives$Kurtosis)
+print(length(sqrtD084outliers))
+```
+
+D067...
+```{r}
+sqrtD067 <- sqrt(8-EFAdata[["D067"]])
+SKsqrtD067 <- mvn(sqrtD067, univariateTest = "SW")
+D067_z_sqrt <- ((sqrtD067-mean(sqrtD067))/sd(sqrtD067))
+sqrtD067outliers <- which(D067_z_sqrt>3.29 | D067_z_sqrt<(-3.29))
+print(SKsqrtD067$Descriptives$Skew)
+print(SKsqrtD067$Descriptives$Kurtosis)
+print(length(sqrtD067outliers))
+```
+
+D013...
+```{r}
+sqrtD013 <- sqrt(8-EFAdata[["D013"]])
+SKsqrtD013 <- mvn(sqrtD013, univariateTest = "SW")
+D013_z_sqrt <- ((sqrtD013-mean(sqrtD013))/sd(sqrtD013))
+sqrtD013outliers <- which(D013_z_sqrt>3.29 | D013_z_sqrt<(-3.29))
+print(SKsqrtD013$Descriptives$Skew)
+print(SKsqrtD013$Descriptives$Kurtosis)
+print(length(sqrtD013outliers))
+```
+
+D017...
+```{r}
+sqrtD017 <- sqrt(8-EFAdata[["D017"]])
+SKsqrtD017 <- mvn(sqrtD017, univariateTest = "SW")
+D017_z_sqrt <- ((sqrtD017-mean(sqrtD017))/sd(sqrtD017))
+sqrtD017outliers <- which(D017_z_sqrt>3.29 | D017_z_sqrt<(-3.29))
+print(SKsqrtD017$Descriptives$Skew)
+print(SKsqrtD017$Descriptives$Kurtosis)
+print(length(sqrtD017outliers))
+```
+
+D058...
+```{r}
+sqrtD058 <- sqrt(8-EFAdata[["D058"]])
+SKsqrtD058 <- mvn(sqrtD058, univariateTest = "SW")
+D058_z_sqrt <- ((sqrtD058-mean(sqrtD058))/sd(sqrtD058))
+sqrtD058outliers <- which(D058_z_sqrt>3.29 | D058_z_sqrt<(-3.29))
+print(SKsqrtD058$Descriptives$Skew)
+print(SKsqrtD058$Descriptives$Kurtosis)
+print(length(sqrtD058outliers))
+```
+
+D074...
+```{r}
+sqrtD074 <- sqrt(8-EFAdata[["D074"]])
+SKsqrtD074 <- mvn(sqrtD074, univariateTest = "SW")
+D074_z_sqrt <- ((sqrtD074-mean(sqrtD074))/sd(sqrtD074))
+sqrtD074outliers <- which(D074_z_sqrt>3.29 | D074_z_sqrt<(-3.29))
+print(SKsqrtD074$Descriptives$Skew)
+print(SKsqrtD074$Descriptives$Kurtosis)
+print(length(sqrtD074outliers))
+```
+
+If this did not reduce the skew and kurtosis to acceptable levels, and if there were still outliers, I reflected the scores (if necessary - which happened to be all of them) and implemented a log10 transform.
+
+D102...
+```{r}
+logD102 <- log10(8-EFAdata[["D102"]])
+SKlogD102 <- mvn(logD102, univariateTest = "SW")
+D102_z_log <- ((logD102-mean(logD102))/sd(logD102))
+logD102outliers <- which(D102_z_log>3.29 | D102_z_log<(-3.29))
+print(SKlogD102$Descriptives$Skew) #empty??
+print(SKlogD102$Descriptives$Kurtosis) #
+print(length(logD102outliers))
+```
+
+D007...
+```{r}
+logD007 <- log10(8-EFAdata[["D007"]])
+SKlogD007 <- mvn(logD007, univariateTest = "SW")
+D007_z_log <- ((logD007-mean(logD007))/sd(logD007))
+logD007outliers <- which(D007_z_log>3.29 | D007_z_log<(-3.29))
+print(SKlogD007$Descriptives$Skew) #empty??
+print(SKlogD007$Descriptives$Kurtosis) #
+print(length(logD007outliers))
+```
+
+D084...
+```{r}
+logD084 <- log10(8-EFAdata[["D084"]])
+SKlogD084 <- mvn(logD084, univariateTest = "SW")
+D084_z_log <- ((logD084-mean(logD084))/sd(logD084))
+logD084outliers <- which(D084_z_log>3.29 | D084_z_log<(-3.29))
+print(SKlogD084$Descriptives$Skew) #empty??
+print(SKlogD084$Descriptives$Kurtosis) #
+print(length(logD084outliers))
+```
+
+D013...
+```{r}
+logD013 <- log10(8-EFAdata[["D013"]])
+SKlogD013 <- mvn(logD013, univariateTest = "SW")
+D013_z_log <- ((logD013-mean(logD013))/sd(logD013))
+logD013outliers <- which(D013_z_log>3.29 | D013_z_log<(-3.29))
+print(SKlogD013$Descriptives$Skew)
+print(SKlogD013$Descriptives$Kurtosis)
+print(length(logD013outliers))
+```
+
+The original nonnormal variables were removed...
+```{r}
+badItems = c('D007','D012','D013','D017','D058','D067','D074','D081','D084','D102')
+for (badItem in badItems){
+  badItemIndex <- which(colnames(EFAdata)==badItem)
+  matA <- EFAdata[1:(badItemIndex-1)]
+  matB <- EFAdata[(badItemIndex+1):length(EFAdata)]
+  EFAdata <- cbind(matA,matB)
+}
+```
+
+...and replaced with the transformed variables.
+```{r}
+EFAdata <- cbind(EFAdata,logD007,sqrtD012,logD013,sqrtD017,sqrtD058,sqrtD067,sqrtD074,sqrtD081,logD084,logD102)
+```
+
+Next, I assessed the transformed data set for multivariate outliers.
+```{r}
+library(psych)
+multiChis <- outlier(EFAdata[,2:length(EFAdata)], plot=TRUE)
+critChi <- 176.014 #https://mathcracker.com/chi-square-critical-values.php#results; right-tailed, df = 126
+multiOutliers <- which(multiChis > critChi)
+multiOutlierIDs <- EFAdata[["ResponseID"]][multiOutliers]
+print(multiOutlierIDs)
+```
+
+I created a data set without the multivariate outliers:
+```{r}
+noMVOEFAdata <- EFAdata[-c(multiOutliers), ]
+```
+
+Then I assessed the multivariate normality of both datasets:
+```{r}
+mvn(EFAdata[,2:length(EFAdata)],mvnTest = "mardia",multivariatePlot="qq")
+mvn(noMVOEFAdata[,2:length(EFAdata)],mvnTest = "mardia",multivariatePlot="qq")
+```
+Both datasets are multivariate nonnormal, so I decided to proceed with the factor analysis using MINRES.
+
+As a final data cleaning step, I assessed the data set for multicollinearity and singularity.
+```{r}
+smc(EFAdata[,2:length(EFAdata)])
+print(which(smc(EFAdata[,2:length(EFAdata)])>.9))
+```
+
+Tolerance for SMCs range up to about .99 on the low end (see T&F), and since none of these variables exceeded .90, I determined there was no multicollinearity or singularity present.
+
+
+%%%%%%%% FACTORABILITY %%%%%%%%
+
+I assessed the data set for sampling adequacy.
+```{r}
+sampAds <- KMO(EFAdata[,2:length(EFAdata)])
+print(sampAds)
+print(which.min(sampAds$MSAi))
+```
+
+
+%%%%%%%% NUMBER OF FACTORS %%%%%%%%
+
+First I conducted an initial run using principal components extraction, in order to figure out the eigenvalues which are greater than one.
+```{r}
+eigenQuery <- principal(EFAdata[,2:length(EFAdata)], rotate="varimax")
+jiffy <- which(eigenQuery$values > 1)
+print(length(jiffy))
+```
+This is probably an unreasonable number of factors, and since the number of variables exceeds 40 and the communalities aren't that uniformly great (spoiler alert), I did not use this value.
+
+Next I conducted a parallel analysis to ascertain the number of factors to extract.
+```{r}
+parallel <- fa.parallel(EFAdata[,2:length(EFAdata)], fm = "minres", fa = 'fa')
+```
+
+I also used Velicer's Minimum Average Partial test and the Very Simple Structure criterion.
+```{r}
+vss(EFAdata[,2:length(EFAdata)], rotate = "oblimin", fm = "minres")
+```
+The VSS does not make much sense, because the item complexity is generally high (spoiler alert again).  The MAP recapitulates the parallel analysis.
+
+
+%%%%%%%% THE ACTUAL EFA %%%%%%%%
+
+The number of factors is either 7 or 8. After Costello & Osborne (2005,) I am running the analysis with the number of factors both below and above the suggestion of the scree plot, parallel and analysis, and MAP.
+```{r}
+library(GPArotation)
+EFAminres6 <- fa(EFAdata[,2:length(EFAdata)], nfactors = 6, rotate = "oblimin", fm = "minres")
+EFAminres7 <- fa(EFAdata[,2:length(EFAdata)], nfactors = 7, rotate = "oblimin", fm = "minres")
+EFAminres8 <- fa(EFAdata[,2:length(EFAdata)], nfactors = 8, rotate = "oblimin", fm = "minres")
+EFAminres9 <- fa(EFAdata[,2:length(EFAdata)], nfactors = 9, rotate = "oblimin", fm = "minres")
+```
+
+They were then inspected (in Excel, commenting out each analysis as needed).
+```{r}
+#print(EFAminres6)
+#print(EFAminres7)
+#print(EFAminres8)
+print(EFAminres9)
+```
+
+The 7:9-factor solutions generally departed from simple structure pretty badly, getting factors where there were two or fewer non-complex variable loadings, so I dug down more into 5 and 6 by looking at them minus the items that didn't load.  5 had a simpler structure when it came to zero loadings (5:6 :: 6:10), number of single-loading items in total (108:100), and substantive factor interpretability (Factor VI in the 6-factor solution was weird and heterogeneous).
+
+The 7- and 9-factor analysis made a factor with no salient items; the 8-factor analysis made a factor with just 2 and a factor with just 3. The 6-factor analysis was the best.
+
+If anyone was interested in whether this analysis survives if I remove the non-loading items, I conducted the 6-factor analysis with the items that didn't load.  This took 3 total iterations, including the first analysis.  The "badItems" vector is where I put the items that failed to load saliently onto any factor at any point in the process.
+```{r}
+reducedEFAdata <- EFAdata
+badItems <- c('D002','D005','D031','D060','D071','D088','D122','D125','D126','D050')
+for (badItem in badItems){
+  badItemIndex <- which(colnames(reducedEFAdata)==badItem)
+  if(badItemIndex==length(reducedEFAdata)){reducedEFAdata <- reducedEFAdata[1:length(reducedEFAdata)-1]}
+  else{
+    matA <- reducedEFAdata[1:(badItemIndex-1)]
+    matB <- reducedEFAdata[(badItemIndex+1):length(reducedEFAdata)]
+    reducedEFAdata <- cbind(matA,matB)
+}}
+EFAminres6red <- fa(reducedEFAdata[,2:length(reducedEFAdata)], nfactors=6, rotate="oblimin", fm="minres")
+print(EFAminres6red)
+```
+
