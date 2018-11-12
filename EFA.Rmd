@@ -283,7 +283,7 @@ eigenQuery <- principal(EFAdata[,2:length(EFAdata)], rotate="varimax")
 jiffy <- which(eigenQuery$values > 1)
 print(length(jiffy))
 ```
-This is probably an unreasonable number of factors, and since the number of variables exceeds 40 and the communalities aren't that uniformly great (spoiler alert), I did not use this value.
+This is probably an unreasonable number of factors, and since the number of variables exceeds 40 and the communalities aren't that uniformly great, I did not use this value.
 
 Next I conducted a parallel analysis to ascertain the number of factors to extract.
 ```{r}
@@ -316,7 +316,7 @@ They were then inspected (in Excel, commenting out each analysis as needed).
 print(EFAminres9)
 ```
 
-The 7:9-factor solutions generally departed from simple structure pretty badly, getting factors where there were two or fewer non-complex variable loadings, so I dug down more into 5 and 6 by looking at them minus the items that didn't load.  5 had a simpler structure when it came to zero loadings (5:6 :: 6:10), number of single-loading items in total (108:100), and substantive factor interpretability (Factor VI in the 6-factor solution was weird and heterogeneous).
+The 7:9-factor solutions generally departed from simple structure pretty badly, getting factors where there were two or fewer non-complex variable loadings, so I dug down more into 5 and 6 by looking at them minus the items that didn't load.
 
 The 7- and 9-factor analysis made a factor with no salient items; the 8-factor analysis made a factor with just 2 and a factor with just 3. The 6-factor analysis was the best.
 
